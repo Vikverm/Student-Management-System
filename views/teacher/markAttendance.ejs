@@ -1,0 +1,247 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <h2 class="heading">📝 Mark Attendance</h2>
+
+  <form action="/teacher/attendance/mark" method="POST" class="attendance-form">
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" class="form-control" value="<%= new Date().toISOString().split('T')[0] %>" required>
+    </div>
+
+    <div class="form-group">
+      <label>Students</label>
+      <div class="attendance-list">
+        <% students.forEach(student => { %>
+          <div class="student-row">
+            <span class="student-info">
+              <strong><%= student.name %></strong> (Roll No: <%= student.rollNumber %>)
+            </span>
+            <div class="attendance-options">
+              <label class="option present">
+                <input type="radio" name="attendance[<%= student._id %>]" value="present" checked>
+                Present
+              </label>
+              <label class="option absent">
+                <input type="radio" name="attendance[<%= student._id %>]" value="absent">
+                Absent
+              </label>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button type="submit" class="btn btn-primary">✅ Save Attendance</button>
+      <a href="/teacher/dashboard" class="btn btn-secondary">❌ Cancel</a>
+    </div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert alert-error">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <% if (typeof errors !== 'undefined' && errors.length) { %>
+      <div class="alert alert-warning">
+        <h4>⚠️ Partial Success</h4>
+        <p><%= attendanceRecords %> records saved successfully</p>
+        <ul>
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f8fb;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  .heading {
+    text-align: center;
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 30px;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    color: #34495e;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+
+  .attendance-list {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    background: #fdfdfd;
+  }
+
+  .student-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .student-row:last-child {
+    border-bottom: none;
+  }
+
+  .student-info {
+    flex: 1;
+    color: #2c3e50;
+  }
+
+  .attendance-options {
+    display: flex;
+    gap: 15px;
+  }
+
+  .attendance-options .option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .option.present input[type="radio"]:checked + span,
+  .option.present:hover {
+    color: green;
+  }
+
+  .option.absent input[type="radio"]:checked + span,
+  .option.absent:hover {
+    color: red;
+  }
+
+  .btn-group {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background-color: #3498db;
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background-color: #2980b9;
+  }
+
+  .btn-secondary {
+    background-color: #bdc3c7;
+    color: #fff;
+  }
+
+  .btn-secondary:hover {
+    background-color: #95a5a6;
+  }
+
+  .alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+  .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .student-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .attendance-options {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('date');
+    if (!dateInput.value) {
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.value = today;
+    }
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+      const selectedDate = new Date(document.getElementById('date').value);
+      const today = new Date();
+      selectedDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate > today) {
+        alert('⚠️ Attendance date cannot be in the future');
+        e.preventDefault();
+      }
+    });
+  });
+</script>

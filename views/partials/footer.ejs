@@ -1,0 +1,66 @@
+</main>
+<footer>
+  <div class="footer-container">
+    <a href="/" class="home-btn">🏠 Return to Home</a>
+    <p>&copy; <%= new Date().getFullYear() %> Student Dashboard System</p>
+  </div>
+</footer>
+
+<script src="/js/script.js"></script>
+</body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #11597d, #dbd142);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+    padding: 2rem;
+  }
+
+  footer {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 1.5rem 0;
+    color: #fff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+    text-align: center;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 1rem;
+  }
+
+  .home-btn {
+    display: inline-block;
+    background-color: #5a2516;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 10px;
+  }
+
+  .home-btn:hover {
+    background-color: #431f14;
+    transform: scale(1.05);
+  }
+
+  footer p {
+    margin: 0;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  }
+</style>

@@ -1,0 +1,245 @@
+<%- include('../partials/header') %>
+  <div class="container">
+    <h2>My Tasks</h2>
+    
+    <div class="task-actions">
+      <a href="/student/dashboard" class="btn">Back to Dashboard</a>
+    </div>
+    
+    <% if (tasks.length > 0) { %>
+      <div class="task-filters">
+        <label>Filter by status:</label>
+        <select id="statusFilter" onchange="filterTasks()">
+          <option value="all">All Tasks</option>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      
+      <table class="task-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Assigned By</th>
+            <th>Assigned Date</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tasks.forEach(task => { %>
+            <tr class="task-row" data-status="<%= task.status %>">
+              <td><%= task.title %></td>
+              <td><%= task.assignedBy.name %></td>
+              <td><%= task.assignedDate.toDateString() %></td>
+              <td class="<%= new Date(task.deadline) < new Date() && task.status !== 'completed' ? 'overdue' : '' %>">
+                <%= task.deadline.toDateString() %>
+                <% if (new Date(task.deadline) < new Date() && task.status !== 'completed') { %>
+                  <span class="badge">Overdue</span>
+                <% } %>
+              </td>
+              <td class="status-<%= task.status %>"><%= task.status %></td>
+              <td class="task-actions">
+                <a href="/student/tasks/<%= task._id %>/submit" class="btn submit-btn">Submit Work</a>
+                <% if (task.status === 'completed') { %>
+                  <span class="completed-badge">Completed</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No tasks have been assigned to you yet.</p>
+    <% } %>
+  </div>
+
+  <style>
+    
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    margin: 0;
+    padding: 0;
+    color: #f0f0f0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .task-actions {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+  }
+
+  .task-filters {
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .task-filters label {
+    font-weight: bold;
+    color: #ecf0f1;
+  }
+
+  .task-filters select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #ecf0f1;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .task-table th {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .task-table td {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    color: #f1f1f1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .task-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: background 0.3s ease;
+  }
+
+  .status-pending {
+    background-color: #f39c12;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .status-completed {
+    background-color: #2ecc71;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .overdue {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+
+  .badge {
+    background-color: #e74c3c;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    margin-left: 6px;
+  }
+
+  .submit-btn {
+    background-color: #16a085;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background-color: #13856c;
+  }
+
+  .completed-badge {
+    background-color: #27ae60;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    display: inline-block;
+  }
+
+  @media (max-width: 768px) {
+    .task-table th, .task-table td {
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
+    .container {
+      padding: 1rem;
+    }
+
+    .task-filters {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+  <script>
+    function filterTasks() {
+      const status = document.getElementById('statusFilter').value;
+      const rows = document.querySelectorAll('.task-row');
+      
+      rows.forEach(row => {
+        if (status === 'all' || row.dataset.status === status) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+  </script>
+<%- include('../partials/footer') %>

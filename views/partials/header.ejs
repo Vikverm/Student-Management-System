@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management System</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #fff;
+    }
+
+    .glass-container {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      margin: 2rem auto;
+      padding: 1.5rem 2rem;
+      width: 90%;
+      max-width: 1200px;
+    }
+
+    .glass-header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .glass-header h1 {
+      font-size: 2rem;
+      margin: 0;
+      color: #ffffff;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .glass-nav a {
+      text-decoration: none;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-container">
+    <header class="glass-header">
+      <h1>Student Management System</h1>
+      <nav class="glass-nav">
+        <% if (typeof teacher !== 'undefined') { %>
+          <a href="/teacher/dashboard">Dashboard</a>
+          <a href="/teacher/tasks">View Tasks</a>
+          <a href="/teacher/tasks/add">Add Task</a>
+          <a href="/teacher/attendance/mark">Mark Attendance</a>
+        <% } else if (typeof student !== 'undefined') { %>
+          <a href="/student/dashboard">Dashboard</a>
+          <a href="/student/tasks">View Tasks</a>
+        <% } else { %>
+          <a href="/">Home</a>
+        <% } %>
+      </nav>
+    </header>
+  </div>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>

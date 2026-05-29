@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+  <div class="welcome-container">
+    <h2>Welcome to Student Management System</h2>
+    <a href="/select-role" class="glass-btn">Get Started</a>
+  </div>
+  
+<%- include('partials/footer') %>
+<style>
+    /* Welcome Container */
+.welcome-container {
+  margin: 4rem auto;
+  padding: 3rem 2rem;
+  max-width: 600px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: #f0f0f0;
+}
+
+.welcome-container h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Button */
+.glass-btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 12px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  transition: 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+</style>

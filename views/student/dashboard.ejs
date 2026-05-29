@@ -1,0 +1,542 @@
+<%- include('../partials/header') %>
+<div class="container dashboard-container">
+  <div class="dashboard-header">
+    <h2 class="welcome-text">Welcome, <%= student.name %></h2>
+    <div class="status-cards">
+      <div class="status-card">
+        <span class="card-value"><%= newTasks.length %></span>
+        <span class="card-label">Pending Tasks</span>
+      </div>
+      <div class="status-card">
+        <span class="card-value"><%= submissions.length %></span>
+        <span class="card-label">Completed Tasks</span>
+      </div>
+      <div class="status-card">
+        <span class="card-value"><%= attendance.filter(a => a.status === 'present').length %></span>
+        <span class="card-label">Days Present</span>
+      </div>
+    </div>
+  </div>
+
+  <% if (successMessage) { %>
+    <div class="alert alert-success">
+      <p><%= successMessage %></p>
+    </div>
+  <% } %>
+
+  <div class="dashboard-sections">
+    <!-- New Tasks Section -->
+    <section class="dashboard-section new-tasks">
+      <div class="section-header">
+        <h3><i class="fas fa-tasks"></i> New Tasks</h3>
+      </div>
+      <% if (newTasks.length > 0) { %>
+        <div class="task-cards">
+          <% newTasks.forEach(task => { %>
+            <div class="task-card">
+              <div class="task-card-header">
+                <h4><%= task.title %></h4>
+                <span class="deadline <%= new Date(task.deadline) < new Date() ? 'overdue' : '' %>">
+                  <i class="far fa-calendar-alt"></i> <%= task.deadline.toDateString() %>
+                </span>
+              </div>
+              <p class="task-description"><%= task.description %></p>
+              <div class="task-card-footer">
+                <span class="assigned-by"><i class="fas fa-user-tie"></i> <%= task.assignedBy.name %></span>
+                <a href="/student/tasks/<%= task._id %>/submit" class="btn btn-primary">
+                  <i class="fas fa-paper-plane"></i> Submit Task
+                </a>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="far fa-check-circle"></i>
+          <p>No new tasks assigned. You're all caught up!</p>
+        </div>
+      <% } %>
+    </section>
+
+    <!-- Completed Tasks Section -->
+    <section class="dashboard-section completed-tasks">
+      <div class="section-header">
+        <h3><i class="fas fa-check-circle"></i> Completed Tasks</h3>
+      </div>
+      <% if (submissions && submissions.length > 0) { %>
+        <div class="task-list">
+          <% submissions.forEach(function(submission) { %>
+            <div class="task-item">
+              <div class="task-info">
+                <h4><%= submission.task.title %></h4>
+                <p class="meta-info">
+                  <span><i class="fas fa-user-tie"></i> <%= submission.task.assignedBy.name %></span>
+                  <span><i class="far fa-calendar-check"></i> <%= submission.submissionDate.toDateString() %></span>
+                </p>
+              </div>
+              <div class="task-status">
+                <% if (submission.graded) { %>
+                  <span class="badge badge-success">Graded</span>
+                <% } else { %>
+                  <span class="badge badge-warning">Pending Review</span>
+                <% } %>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="far fa-clock"></i>
+          <p>No completed tasks yet. Get started on your assignments!</p>
+        </div>
+      <% } %>
+    </section>
+
+    <!-- Grades Section -->
+    <section class="dashboard-section grades">
+      <div class="section-header">
+        <h3><i class="fas fa-star"></i> Grades</h3>
+      </div>
+      <% if (grades.length > 0) { %>
+        <div class="table-responsive">
+          <table class="grades-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Marks</th>
+                <th>Remarks</th>
+                <th>Graded By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% grades.forEach(grade => { %>
+                <tr>
+                  <td><%= grade.task.title %></td>
+                  <td class="grade-value"><%= grade.marks %></td>
+                  <td><%= grade.remarks || 'N/A' %></td>
+                  <td><%= grade.gradedBy.name %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="far fa-star"></i>
+          <p>No grades available yet. Submit your tasks to get graded!</p>
+        </div>
+      <% } %>
+    </section>
+
+    <!-- Attendance Section -->
+    <section class="dashboard-section attendance">
+      <div class="section-header">
+        <h3><i class="fas fa-calendar-alt"></i> Attendance Record</h3>
+      </div>
+      <% if (attendance.length > 0) { %>
+        <div class="attendance-chart">
+          <div class="attendance-stats">
+            <% const presentCount = attendance.filter(a => a.status === 'present').length %>
+            <% const totalCount = attendance.length %>
+            <% const percentage = Math.round((presentCount / totalCount) * 100) %>
+            <div class="attendance-percentage">
+              <div class="percentage-circle" style="--percentage: <%= percentage %>;">
+                <span><%= percentage %>%</span>
+              </div>
+              <p>Attendance Rate</p>
+            </div>
+            <div class="attendance-breakdown">
+              <div class="breakdown-item present">
+                <span class="count"><%= presentCount %></span>
+                <span class="label">Present</span>
+              </div>
+              <div class="breakdown-item absent">
+                <span class="count"><%= totalCount - presentCount %></span>
+                <span class="label">Absent</span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="attendance-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% attendance.forEach(record => { %>
+                  <tr>
+                    <td><%= record.date.toDateString() %></td>
+                    <td class="status <%= record.status %>">
+                      <span class="status-badge"><%= record.status %></span>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="far fa-calendar-times"></i>
+          <p>No attendance records found.</p>
+        </div>
+      <% } %>
+    </section>
+  </div>
+</div>
+<%- include('../partials/footer') %>
+<style>
+  /* Dashboard Container */
+.dashboard-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.welcome-text {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.status-cards {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.status-card {
+  flex: 1;
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3498db;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.card-label {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+/* Alerts */
+.alert {
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 2rem;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Dashboard Sections */
+.dashboard-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.dashboard-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.section-header h3 {
+  color: #2c3e50;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Task Cards */
+.task-cards {
+  display: grid;
+  gap: 1rem;
+}
+
+.task-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.2rem;
+  transition: transform 0.2s;
+}
+
+.task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.task-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.task-card-header h4 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.deadline {
+  font-size: 0.8rem;
+  background: #f8f9fa;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.deadline.overdue {
+  background: #ffecec;
+  color: #e74c3c;
+}
+
+.task-description {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.task-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assigned-by {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Task List */
+.task-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  border-bottom: 1px solid #eee;
+}
+
+.task-info h4 {
+  margin: 0 0 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.meta-info {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.meta-info span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.badge-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge-warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Tables */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.grades-table, .attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.grades-table th, .attendance-table th {
+  background: #f8f9fa;
+  padding: 0.8rem;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.grades-table td, .attendance-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+
+.grade-value {
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.status.present {
+  color: #27ae60;
+}
+
+.status.absent {
+  color: #e74c3c;
+}
+
+.status-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  background: #f8f9fa;
+}
+
+/* Attendance Chart */
+.attendance-chart {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.attendance-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+}
+
+.attendance-percentage {
+  text-align: center;
+}
+
+.percentage-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: conic-gradient(#27ae60 var(--percentage), #eee 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.5rem;
+}
+
+.percentage-circle span {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+.attendance-breakdown {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.breakdown-item {
+  text-align: center;
+}
+
+.breakdown-item .count {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: block;
+}
+
+.breakdown-item .label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.breakdown-item.present .count {
+  color: #27ae60;
+}
+
+.breakdown-item.absent .count {
+  color: #e74c3c;
+}
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #7f8c8d;
+}
+
+.empty-state i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #bdc3c7;
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #2980b9;
+}
+
+/* Icons */
+.fas, .far {
+  font-size: 0.9em;
+}
+</style>

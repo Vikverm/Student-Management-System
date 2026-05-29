@@ -1,0 +1,294 @@
+<%- include('../partials/header') %>
+  <div class="container">
+    <h2>Task Submissions: <%= task.title %></h2>
+    <p>Assigned to: <%= task.assignedTo.name %></p>
+    <p>Deadline: <%= task.deadline.toDateString() %></p>
+    
+    <% if (submissions.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Submission Date</th>
+            <th>Content</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% submissions.forEach(submission => { %>
+            <tr>
+              <td><%= submission.student.name %></td>
+              <td><%= submission.submissionDate.toDateString() %></td>
+              <td>
+                <% if (submission.content.length > 50) { %>
+                  <%= submission.content.substring(0, 50) %>...
+                <% } else { %>
+                  <%= submission.content %>
+                <% } %>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <a href="#" class="btn view-btn" onclick="viewFullSubmission('<%= submission._id %>')">View Full</a>
+                  <a href="/teacher/tasks/<%= task._id %>/grade/<%= submission.student._id %>" class="btn grade-btn">Add Grade</a>
+                </div>
+              </td>
+            </tr>
+            
+            <!-- Full Submission Modal (hidden by default) -->
+            <div id="modal-<%= submission._id %>" class="modal">
+              <div class="modal-content">
+                <span class="close" onclick="closeModal('<%= submission._id %>')">&times;</span>
+                <h3>Full Submission Details</h3>
+                <div class="submission-details">
+                  <p><strong>Student:</strong> <%= submission.student.name %></p>
+                  <p><strong>Submitted on:</strong> <%= submission.submissionDate.toLocaleString() %></p>
+                  <div class="content-box">
+                    <h4>Submission Content:</h4>
+                    <p><%= submission.content %></p>
+                  </div>
+                  <% if (submission.fileUrl) { %>
+                    <div class="file-attachment">
+                      <h4>Attached File:</h4>
+                      <a href="<%= submission.fileUrl %>" target="_blank" class="btn">Download File</a>
+                    </div>
+                  <% } %>
+                </div>
+                <div class="modal-actions">
+                  <a href="/teacher/tasks/<%= task._id %>/grade/<%= submission.student._id %>" class="btn grade-btn">Add Grade</a>
+                  <button onclick="closeModal('<%= submission._id %>')" class="btn close-btn">Close</button>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No submissions have been made for this task yet.</p>
+    <% } %>
+    
+    <div class="back-link">
+      <a href="/teacher/tasks" class="btn">Back to Tasks</a>
+    </div>
+  </div>
+
+  <style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #ecf0f1;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  h2, p {
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+  }
+
+  th {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #f0f0f0;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+
+  tr:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .view-btn {
+    background-color: #3498db;
+  }
+
+  .view-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .grade-btn {
+    background-color: #2ecc71;
+  }
+
+  .grade-btn:hover {
+    background-color: #27ae60;
+  }
+
+  .close-btn {
+    background-color: #95a5a6;
+  }
+
+  .close-btn:hover {
+    background-color: #7f8c8d;
+  }
+
+  .back-link {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  /* Modal Styling */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .modal-content {
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    color: #ecf0f1;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .close {
+    color: #f1f1f1;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close:hover {
+    color: #fff;
+  }
+
+  .submission-details {
+    margin-top: 1rem;
+  }
+
+  .submission-details p {
+    margin-bottom: 10px;
+  }
+
+  .content-box {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-left: 4px solid #3498db;
+    border-radius: 6px;
+    margin-top: 1rem;
+  }
+
+  .file-attachment {
+    background-color: rgba(255, 255, 255, 0.08);
+    padding: 0.8rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+  }
+
+  .file-attachment a {
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: scale(0.95);}
+    to {opacity: 1; transform: scale(1);}
+  }
+
+  @media (max-width: 768px) {
+    .action-buttons {
+      flex-direction: column;
+    }
+
+    .modal-content {
+      width: 95%;
+    }
+
+    th, td {
+      font-size: 0.8rem;
+    }
+
+    .btn {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+    }
+  }
+</style>
+
+
+  <script>
+    function viewFullSubmission(submissionId) {
+      event.preventDefault();
+      const modal = document.getElementById(`modal-${submissionId}`);
+      modal.style.display = "block";
+    }
+    
+    function closeModal(submissionId) {
+      const modal = document.getElementById(`modal-${submissionId}`);
+      modal.style.display = "none";
+    }
+    
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+      if (event.target.className === "modal") {
+        event.target.style.display = "none";
+      }
+    }
+  </script>
+<%- include('../partials/footer') %>
