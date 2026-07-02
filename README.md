@@ -1,42 +1,44 @@
 # 🎓 Student Management System
 
-A full-stack **Student Management System** developed using **Node.js, Express.js, MongoDB, HTML, CSS, JavaScript, and EJS**. This web application helps teachers and students manage academic activities such as tasks, attendance, dashboards, and submissions.
+A full-stack **Student Management System** built using **Node.js, Express.js, MongoDB, and EJS**. The application provides an efficient way to manage student and teacher records through an intuitive web interface.
 
-## 🚀 Features
+## 🚀 Live Demo
 
-### 👨‍🏫 Teacher Module
-- Teacher Dashboard
-- Add and Manage Tasks
-- Assign Tasks to Students
-- Mark Student Attendance
-- View Student Task Submissions
-- Monitor Student Activities
+🌐 https://student-management-system-n4of.onrender.com/
 
-### 👨‍🎓 Student Module
-- Student Dashboard
-- View Assigned Tasks
-- Submit Tasks
-- Upload Files for Submission
-- Track Attendance
-- Check Task Status
+---
 
-### 📋 Attendance Management
-- Mark Present/Absent
-- Date-based Attendance Tracking
-- Attendance Records Storage
+## ✨ Features
 
-### 📝 Task Management
-- Assign Tasks with Deadline
-- Task Title & Description
-- Task Status Tracking
-- Student Submission System
+### 👨‍🎓 Student Management
+- Add new students
+- View all students
+- Edit student information
+- Delete student records
+
+### 👨‍🏫 Teacher Management
+- Add new teachers
+- View all teachers
+- Edit teacher information
+- Delete teacher records
+
+### 📊 Dashboard
+- User-friendly interface
+- Responsive design
+- Easy navigation
+
+### 🗄️ Database
+- MongoDB Atlas integration
+- Efficient CRUD operations using Mongoose
+
+---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
 - HTML5
 - CSS3
-- JavaScript
+- Bootstrap
 - EJS
 
 ### Backend
@@ -44,94 +46,161 @@ A full-stack **Student Management System** developed using **Node.js, Express.js
 - Express.js
 
 ### Database
-- MongoDB
+- MongoDB Atlas
 - Mongoose
 
-## 📸 Project Screenshots
+### Deployment
+- Render
 
-### Home Page
-- User-friendly interface for students and teachers
+### Version Control
+- Git
+- GitHub
 
-### Teacher Dashboard
-- Manage students, attendance, and tasks
-
-### Student Dashboard
-- View tasks, attendance, and submissions
-
-### Attendance System
-- Teachers can mark attendance
-
-### Task Submission
-- Students can upload task submissions
+---
 
 ## 📂 Project Structure
 
-```bash
-Student-management-system/
-│── config/
-│── models/
-│── routes/
-│── views/
-│── public/
-│── node_modules/
-│── .env
-│── app.js
-│── package.json
+```text
+Student-Management-System
+│
+├── config/
+│   └── db.js
+│
+├── models/
+│   ├── Student.js
+│   └── Teacher.js
+│
+├── routes/
+│   ├── studentRoutes.js
+│   └── teacherRoutes.js
+│
+├── views/
+│
+├── public/
+│
+├── app.js
+├── package.json
+└── README.md
 ```
 
-## ⚙️ Installation & Setup
+---
 
-### 1️⃣ Clone Repository
+## ⚙️ Installation
 
-```bash
-git clone https://github.com/Vikverm/Internship-project-student-management-system.git
-```
-
-### 2️⃣ Open Project Folder
+### 1. Clone the Repository
 
 ```bash
-cd Internship-project-student-management-system
+git clone https://github.com/Vikverm/Intership-project-student-management-system.git
 ```
 
-### 3️⃣ Install Dependencies
+### 2. Navigate to the Project Folder
+
+```bash
+cd Intership-project-student-management-system
+```
+
+### 3. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 4️⃣ Configure Environment Variables
-
-Create a `.env` file and add:
+### 4. Create a `.env` File
 
 ```env
-MONGO_URI=mongodb://127.0.0.1:27017/student-management
-PORT=3000
+MONGODB_URI=your_mongodb_connection_string
 ```
 
-### 5️⃣ Run MongoDB
+### 5. Run the Application
 
-Start MongoDB service.
+Using npm:
 
-### 6️⃣ Start Project
+```bash
+npm start
+```
+
+Or:
 
 ```bash
 node app.js
 ```
 
-## 🌟 Future Improvements
-- Authentication System
-- Admin Dashboard
-- Notifications
-- Better UI/UX
-- Student Performance Analytics
+The application will start on:
 
-## 👥 Team Members
-- Shameem  
-- Vansh Tanwar  
-- Vikas Verma
+```
+http://localhost:3000
+```
 
-## 📄 License
-This project is for educational and internship purposes.
+*(or the port specified in your environment variables)*
 
 ---
-⭐ If you like this project, give it a star on GitHub!
+
+## 📊 Project Presentation
+
+A detailed PowerPoint presentation explaining the project architecture, workflow, database design, implementation, and features will be added to this repository.
+
+---
+
+## 🚀 Future Enhancements
+
+- User Authentication
+- Search & Filter Functionality
+- Student Attendance Module
+- Result Management System
+- Pagination
+- File Upload Support
+- REST API Integration
+- Dark Mode
+- Role-Based Access Control
+- Data Export (Excel/PDF)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork this repository.
+2. Create a new feature branch.
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit your changes.
+
+```bash
+git commit -m "Add your feature"
+```
+
+4. Push the branch.
+
+```bash
+git push origin feature-name
+```
+
+5. Open a Pull Request.
+
+---
+
+## 👨‍💻 Developer
+
+**Vikas Verma**
+
+📧 **Email:** vikasverm48472@gmail.com
+
+🔗 **LinkedIn:** https://www.linkedin.com/in/vikasverma9711/
+
+💻 **GitHub:** https://github.com/Vikverm
+
+---
+
+## ⭐ Support
+
+If you found this project helpful, please consider giving it a ⭐ on GitHub.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
