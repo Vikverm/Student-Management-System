@@ -137,7 +137,8 @@ http://localhost:3000
 
 ## 📊 Project Presentation
 
-A detailed PowerPoint presentation explaining the project architecture, workflow, database design, implementation, and features will be added to this repository.
+A detailed PowerPoint presentation explaining the project architecture, workflow, database design, implementation, and features is available in repository.
+find in docs folder PPT S. MANAGEMENT.PDF 
 
 ---
 
